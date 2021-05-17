@@ -1,0 +1,4 @@
+
+## Storing Water for a Rainy Day
+
+You start thinking... a reservoir (you can call it a lake) above town could really serve a lot of purposes. A lake will provide a place for you to have fun — go swimming, boating, catch catfish, and relax. You can run your water-supply intake pipes from the lake instead of from your creek, especially since the flood destroyed your water-intake pumping station. With a dam you can release only the amount of water you want into the creek below the dam, thus making sure you have just the right amount of water running in Dryville Creek at all times. A dam would even help prevent flooding downstream because you can hold extra rainfall and runoff during a storm and slowly release it afterward. You can build a bigger paddle wheel, or, better yet, construct a real hydroelectric power plant in your dam to start generating electricity! More problems solved.

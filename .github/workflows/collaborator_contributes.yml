@@ -1,0 +1,56 @@
+# This workflow will be run when an issue labeled "trigger-collab" is closed.
+
+name: Collaborator contributes to file
+
+# Trigger a workflow for a closed issue
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  
+  # This job builds if the issue closure is labeled trigger-collab
+  build_if_collab:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Only run the job if the closed issue has the label "trigger-collab"
+    # Idea borrowed from: https://github.community/t5/GitHub-Actions/Do-something-if-a-particular-label-is-set/td-p/40712
+    if: contains(github.event.issue.labels.*.name, 'trigger-collab' )
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      
+      # Seems like you need this first for all actions ...
+      - name: Checkout repository
+        uses: actions/checkout@v1
+    
+      # Add the next story section to the file
+      - name: Update dryville_story.md
+        run: |
+          function file_ends_with_newline() {
+            [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
+          }
+          
+          if ! file_ends_with_newline ./dryville_story.md
+          then
+              echo "" >> ./dryville_story.md
+          fi
+
+          cat ./.github/commit_content/be_gone_dirty_water.md >> ./dryville_story.md
+      
+      # Updating a file uses the GitHub action, https://github.com/marketplace/actions/update-files-on-github
+      - name: Commit updates to dryville_story.md
+        uses: test-room-7/action-update-file@v1
+        with:
+          file-path: dryville_story.md
+          commit-msg: add be-gone-dirty-water section
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  
+  # Idea from https://github.community/t5/GitHub-Actions/Workflow-is-failing-if-no-job-can-be-ran-due-to-condition/td-p/38085
+  always_job:
+    name: Always run job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Always run
+        run: echo "This job is used to prevent the worflow status from showing failed if the build_if_collab job is skipped."

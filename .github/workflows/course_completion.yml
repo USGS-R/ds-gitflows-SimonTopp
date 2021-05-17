@@ -1,0 +1,47 @@
+# This workflow will be run when an issue labeled "trigger-complete" is closed.
+
+name: Participant completed course
+
+# Trigger a workflow for a closed issue
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  
+  # This job builds if the issue closure is labeled trigger-complete
+  build_if_complete:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Only run the job if the closed issue has the label "trigger-complete"
+    # Idea borrowed from: https://github.community/t5/GitHub-Actions/Do-something-if-a-particular-label-is-set/td-p/40712
+    if: contains(github.event.issue.labels.*.name, 'trigger-complete' )
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      
+      # Seems like you need this first for all actions ...
+      - name: Checkout repository
+        uses: actions/checkout@v1
+    
+      # Replace the README with the course completion version
+      - name: Update README.md
+        run: |
+          cat ./.github/commit_content/readme_participant_end.md > ./README.md
+      
+      # Updating a file uses the GitHub action, https://github.com/marketplace/actions/update-files-on-github
+      - name: Commit updates to README.md
+        uses: test-room-7/action-update-file@v1
+        with:
+          file-path: README.md
+          commit-msg: congratulations - you completed the course
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Idea from https://github.community/t5/GitHub-Actions/Workflow-is-failing-if-no-job-can-be-ran-due-to-condition/td-p/38085
+  always_job:
+    name: Always run job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Always run
+        run: echo "This job is used to prevent the worflow status from showing failed if the build_if_complete job is skipped."
